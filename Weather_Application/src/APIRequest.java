@@ -19,6 +19,11 @@ public class APIRequest {
 	Object humidity;
 	Object wind_speed;
 	Object cloud_coverage;
+	Object longitude;
+	Object latitude;
+	
+	final String UrlString = "http://api.openweathermap.org/data/2.5/weather?";
+	final String appid = "&appid=7b4f07573c184034f4d2230c7d5046b6&units=imperial";
 	
 	public static Map<String, Object> jsonToMap(String str){
 		Map<String, Object> map = new Gson().fromJson(
@@ -27,9 +32,27 @@ public class APIRequest {
 		return map;
 	}
 	
+	/* **   API calls   ***/
+	public String useZip(String zip, String country) {
+		return UrlString + "zip=" + zip +"," + country + appid;
+	}
+	
+	public String useCoords(String lat, String lon) {
+		return UrlString + "lat=" + lat + "&lon=" + lon + appid;
+	}
+	
+	public String useCityID(String id) {
+		return UrlString + "id=" + id + appid;
+	}
+	
+	public String useCity(String city, String state) {
+		return UrlString + "q=" + city + "," + state + appid;
+	}
+	/* *******************/
+	
 	public void getWeatherCurr(String zipCode, String countryCode){
 		
-		String urlToRequest = "http://api.openweathermap.org/data/2.5/weather?zip=" + zipCode + "," + countryCode + "&appid=7b4f07573c184034f4d2230c7d5046b6&units=imperial";
+		String urlToRequest = useZip(zipCode, countryCode);
 		StringBuilder weatherInfoJson = new StringBuilder();
 		
 		try {
@@ -44,6 +67,7 @@ public class APIRequest {
 			br.close();																			// Once info is all taken, close the stream reader.	
 			
 			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString());					// map info from json file
+			Map<String, Object> coordMap = jsonToMap(weatherInfoMap.get("coord").toString());
 			Map<String, Object> mainMap = jsonToMap(weatherInfoMap.get("main").toString());				// sub map for 'main'
 			Map<String, Object> windMap = jsonToMap(weatherInfoMap.get("wind").toString()); 			// sub map for 'wind'
 			Map<String, Object> cloudsMap = jsonToMap(weatherInfoMap.get("clouds").toString());          // sub map for 'clouds'
@@ -56,7 +80,41 @@ public class APIRequest {
 			humidity = mainMap.get("humidity");
 			wind_speed = windMap.get("speed");
 			cloud_coverage = cloudsMap.get("all");
+			longitude = coordMap.get("lon");
+			latitude = coordMap.get("lat");
 		
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void getOneshot(String zipCode, String countryCode) {
+		this.getWeatherCurr(zipCode, countryCode);
+		
+		String urlToRequest = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=current" + appid;
+		StringBuilder weatherInfoJson = new StringBuilder();
+		
+		try {
+			URL url = new URL(urlToRequest);
+			URLConnection url_conn = url.openConnection();
+			InputStreamReader is = new InputStreamReader(url_conn.getInputStream());
+			BufferedReader br = new BufferedReader(is);
+			String line;
+			while((line = br.readLine()) != null) {
+				weatherInfoJson.append(line);
+			}
+			br.close();
+			
+			//Map out data
+			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString());
+			Map<String, Object> minuteMap = jsonToMap(weatherInfoJson.toString());
+			//Map<String, Object> hourMap = jsonToMap(weatherInfoMap.get("hourly").toString());
+			//Map<String, Object> dayMap = jsonToMap(weatherInfoMap.get("daily").toString());
+			
+			System.out.println(minuteMap);
+			//System.out.println(hourMap);
+			//System.out.println(dayMap);
 		}
 		catch (Exception e) {
 			System.out.println(e);

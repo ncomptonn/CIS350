@@ -17,7 +17,7 @@ public class GUI {
 	private void enterLocation(JPanel panel, JFrame frame) {
 		
 		JLabel zipLabel = new JLabel("Enter Zip Code: ");
-		JTextField txtZip = new JTextField("48334", 5);
+		JTextField txtZip = new JTextField("49444", 5);
 		
 		JLabel countryLabel = new JLabel("Enter Country Code: ");
 		JTextField txtCountry = new JTextField("us", 5);
@@ -36,6 +36,7 @@ public class GUI {
 		String countryCode = txtCountry.getText();
 		
 		APIR.getWeatherCurr(zipCode, countryCode);
+		APIR.getOneshot(zipCode, countryCode);
 	}
 	
 	private void curr_Display(JPanel panel, JFrame frame) {
@@ -45,12 +46,16 @@ public class GUI {
 		JLabel label3 = new JLabel("Clouds: " + APIR.cloud_coverage);
 		JLabel label4 = new JLabel("Wind: " + APIR.wind_speed);
 		JLabel label5 = new JLabel("Humidity: " + APIR.humidity);
+		JLabel label6 = new JLabel("Latitude: " + APIR.latitude);
+		JLabel label7 = new JLabel("Longitude: " + APIR.longitude);
 				
 		panel.add(label1);
 		panel.add(label2);
 		panel.add(label3);
 		panel.add(label4);
-		panel.add(label5);				
+		panel.add(label5);			
+		panel.add(label6);
+		panel.add(label7);
 	}
 	
 	public GUI() {
