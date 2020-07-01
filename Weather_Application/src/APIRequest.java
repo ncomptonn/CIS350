@@ -90,8 +90,9 @@ public class APIRequest {
 	}
 	
 	public void getOneshot(String zipCode, String countryCode) {
-		this.getWeatherCurr(zipCode, countryCode);
+		this.getWeatherCurr(zipCode, countryCode);											//get current weather to find lon&lat
 		
+		//Everything here is built from getWeatherCurrent(int, String) function
 		String urlToRequest = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=current" + appid;
 		StringBuilder weatherInfoJson = new StringBuilder();
 		
@@ -108,13 +109,8 @@ public class APIRequest {
 			
 			//Map out data
 			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString());
-			Map<String, Object> minuteMap = jsonToMap(weatherInfoJson.toString());
-			//Map<String, Object> hourMap = jsonToMap(weatherInfoMap.get("hourly").toString());
-			//Map<String, Object> dayMap = jsonToMap(weatherInfoMap.get("daily").toString());
 			
-			System.out.println(minuteMap);
-			//System.out.println(hourMap);
-			//System.out.println(dayMap);
+			System.out.println(weatherInfoMap);						//currently just prints out the data to show structure
 		}
 		catch (Exception e) {
 			System.out.println(e);
