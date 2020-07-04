@@ -4,14 +4,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.google.gson.*;
 import com.google.gson.reflect.*;
 
-
 public class APIRequest {
-	
+
 	Object curr_temp;
 	Object curr_temp_feel;
 	Object temp_min;
@@ -21,58 +19,67 @@ public class APIRequest {
 	Object cloud_coverage;
 	Object longitude;
 	Object latitude;
+	Object cityName;
 	
 	final String UrlString = "http://api.openweathermap.org/data/2.5/weather?";
 	final String appid = "&appid=7b4f07573c184034f4d2230c7d5046b6&units=imperial";
-	
-	public static Map<String, Object> jsonToMap(String str){
-		Map<String, Object> map = new Gson().fromJson(
-				str, new TypeToken<HashMap<String, Object>>() {}.getType()
-		);
+
+	public static Map<String, Object> jsonToMap(String str) {
+		Map<String, Object> map = new Gson().fromJson(str, new TypeToken<HashMap<String, Object>>() {
+		}.getType());
 		return map;
 	}
-	
-	/* **   API calls   ***/
+
+	/* ** API calls ***/
 	public String useZip(String zip, String country) {
-		return UrlString + "zip=" + zip +"," + country + appid;
+		return UrlString + "zip=" + zip + "," + country + appid;
 	}
-	
+
 	public String useCoords(String lat, String lon) {
 		return UrlString + "lat=" + lat + "&lon=" + lon + appid;
 	}
-	
+
 	public String useCityID(String id) {
 		return UrlString + "id=" + id + appid;
 	}
-	
+
 	public String useCity(String city, String state) {
 		return UrlString + "q=" + city + "," + state + appid;
 	}
 	/* *******************/
-	
-	public void getWeatherCurr(String zipCode, String countryCode){
-		
+
+	public void getWeatherCurr(String zipCode, String countryCode) {
+
 		String urlToRequest = useZip(zipCode, countryCode);
 		StringBuilder weatherInfoJson = new StringBuilder();
-		
+
 		try {
-			URL url = new URL(urlToRequest);													// format desired url
-			URLConnection url_conn = url.openConnection();										// open connection
-			InputStreamReader is = new InputStreamReader(url_conn.getInputStream());			// create input stream from connection
-			BufferedReader br = new BufferedReader(is);											// create buffer to read in entire input stream
+			// format desired url
+			URL url = new URL(urlToRequest); 
+			// open connection
+			URLConnection url_conn = url.openConnection();
+			// create input stream from connection
+			InputStreamReader is = new InputStreamReader(url_conn.getInputStream()); 
+			// create buffer to read in entire input stream				
+			BufferedReader br = new BufferedReader(is); 
 			String line;
-			while ((line = br.readLine()) != null) {											// While there are still lines of info to read, read them in
-				weatherInfoJson.append(line);														// and add them all to a string called 'weather_info' (weather_info
-			}																					// is a string builder to allow creation of one big string).
-			br.close();																			// Once info is all taken, close the stream reader.	
-			
-			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString());					// map info from json file
+			/***
+			 * While there are still lines of info to read, read them in and add them all to a string called 
+			 * 'weather_info' (weather_infois a string builder to allow creation of one big string). 
+			 */
+			while ((line = br.readLine()) != null) { 
+				weatherInfoJson.append(line); 
+			} 
+			// Once info is all taken, close the stream reader.
+			br.close(); 
+
+			// map info from json file
+			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString()); 
 			Map<String, Object> coordMap = jsonToMap(weatherInfoMap.get("coord").toString());
-			Map<String, Object> mainMap = jsonToMap(weatherInfoMap.get("main").toString());				// sub map for 'main'
-			Map<String, Object> windMap = jsonToMap(weatherInfoMap.get("wind").toString()); 			// sub map for 'wind'
-			Map<String, Object> cloudsMap = jsonToMap(weatherInfoMap.get("clouds").toString());          // sub map for 'clouds'
-			
-			
+			Map<String, Object> mainMap = jsonToMap(weatherInfoMap.get("main").toString()); 
+			Map<String, Object> windMap = jsonToMap(weatherInfoMap.get("wind").toString()); 
+			Map<String, Object> cloudsMap = jsonToMap(weatherInfoMap.get("clouds").toString());
+
 			curr_temp = mainMap.get("temp");
 			curr_temp_feel = mainMap.get("feels_like");
 			temp_min = mainMap.get("temp_min");
@@ -82,42 +89,40 @@ public class APIRequest {
 			cloud_coverage = cloudsMap.get("all");
 			longitude = coordMap.get("lon");
 			latitude = coordMap.get("lat");
-		
-		}
-		catch (Exception e) {
+			cityName = weatherInfoMap.get("name");
+
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void getOneshot(String zipCode, String countryCode) {
-		this.getWeatherCurr(zipCode, countryCode);											//get current weather to find lon&lat
+		// get current weather to find lon&lat
+		this.getWeatherCurr(zipCode, countryCode);
 		
-		//Everything here is built from getWeatherCurrent(int, String) function
-		String urlToRequest = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=current" + appid;
+		// Everything here is built from getWeatherCurrent(int, String) function
+		String urlToRequest = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude
+				+ "&exclude=current" + appid;
 		StringBuilder weatherInfoJson = new StringBuilder();
-		
+
 		try {
 			URL url = new URL(urlToRequest);
 			URLConnection url_conn = url.openConnection();
 			InputStreamReader is = new InputStreamReader(url_conn.getInputStream());
 			BufferedReader br = new BufferedReader(is);
 			String line;
-			while((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null) {
 				weatherInfoJson.append(line);
 			}
 			br.close();
-			
-			//Map out data
+
+			// Map out data
 			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString());
 			
-			System.out.println(weatherInfoMap);						//currently just prints out the data to show structure
-		}
-		catch (Exception e) {
+			// currently just prints out the data to show structure
+			System.out.println(weatherInfoMap);
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 }
-
-
-
-

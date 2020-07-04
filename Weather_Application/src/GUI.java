@@ -1,46 +1,25 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
 public class GUI {
-	
+
 	APIRequest APIR = new APIRequest();
-	
+
 	private void enterLocation(JPanel panel, JFrame frame) {
-		
-		JLabel zipLabel = new JLabel("Enter Zip Code: ");
-		JTextField txtZip = new JTextField("49444", 5);
-		
-		JLabel countryLabel = new JLabel("Enter Country Code: ");
-		JTextField txtCountry = new JTextField("us", 5);
-		
-		JButton location_button = new JButton("Enter");
-		
-//		location_button.addActionListener;
-		
-		panel.add(zipLabel);
-		panel.add(txtZip);
-		panel.add(countryLabel);
-		panel.add(txtCountry);
-		panel.add(location_button);
-		
-		String zipCode = txtZip.getText();
-		String countryCode = txtCountry.getText();
-		
+
+		String zipCode = JOptionPane.showInputDialog(null, "Enter Zip Code: ");
+		String countryCode = JOptionPane.showInputDialog(null, "Enter Country Code: ");
 		APIR.getWeatherCurr(zipCode, countryCode);
 		APIR.getOneshot(zipCode, countryCode);
 	}
-	
+
 	private void curr_Display(JPanel panel, JFrame frame) {
-		
+
 		JLabel label1 = new JLabel("Current Tempurature: " + APIR.curr_temp);
 		JLabel label2 = new JLabel("Feels Like: " + APIR.curr_temp_feel);
 		JLabel label3 = new JLabel("Clouds: " + APIR.cloud_coverage);
@@ -48,49 +27,43 @@ public class GUI {
 		JLabel label5 = new JLabel("Humidity: " + APIR.humidity);
 		JLabel label6 = new JLabel("Latitude: " + APIR.latitude);
 		JLabel label7 = new JLabel("Longitude: " + APIR.longitude);
-				
+		JLabel label8 = new JLabel("City: " + APIR.cityName);
+
 		panel.add(label1);
 		panel.add(label2);
 		panel.add(label3);
 		panel.add(label4);
-		panel.add(label5);			
+		panel.add(label5);
 		panel.add(label6);
 		panel.add(label7);
+		panel.add(label8);
 	}
-	
+
 	public GUI() {
-		
-		//create frame
+
+		// create frame
 		JFrame frame = new JFrame("Weather!");
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
-		//panel inside frame
+
+		// panel inside frame
 		JPanel txt_panel = new JPanel();
 		JPanel current_panel = new JPanel();
 		txt_panel.setBackground(Color.gray);
 		current_panel.setBackground(Color.white);
-		txt_panel.setBounds(100,100, 100, 100);
+		txt_panel.setBounds(100, 100, 100, 100);
 		current_panel.setBounds(200, 200, 200, 200);
-//		txt_panel.setSize(800, 500);
-//		current_panel.setSize(200, 200);
-//		txt_panel.setAlignmentX(0);
-//		txt_panel.setAlignmentY(0);
-		
-		
 
-		//display everything in frame
+		// display everything in frame
 		frame.add(current_panel);
 		frame.add(txt_panel);
 		frame.pack();
-		
-		//call different features
+
+		// call different features
 		enterLocation(txt_panel, frame);
 		curr_Display(current_panel, frame);
-		
-		
+
 		frame.setVisible(true);
-		
-		
+
 	}
 }

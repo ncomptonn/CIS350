@@ -1,16 +1,25 @@
-import java.util.Map;
+import java.awt.EventQueue;
 
 public class Main {
 
 	public static void main(String[] args) {
+
+		//new GUI();
 		
-//		APIRequest apiR = new APIRequest();
-//		apiR.getWeatherCurr();
-		
-		new GUI();
-		
+		/**
+		 * Launch the application.
+		 */
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUInew frame = new GUInew();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
 	}
 
 }
-
-
