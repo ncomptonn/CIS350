@@ -1,0 +1,13 @@
+import static org.junit.Assert.*;
+import org.junit.*;
+
+public class Testing {
+
+	@Test
+	public void testUseZip() {
+		Junit test = new Junit();
+		String result = APIRequest.useZip("48334", "us");
+		
+	}
+
+}

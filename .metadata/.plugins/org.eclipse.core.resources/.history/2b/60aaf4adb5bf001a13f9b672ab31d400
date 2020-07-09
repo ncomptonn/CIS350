@@ -1,0 +1,14 @@
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class Testing {
+
+	@Test
+	public void TestFalseZip() {
+		MyJUnitClass junit = new MyJUnitClass();
+		String result = junit.useZip(48334, "us");
+		assertEquals("http://api.openweathermap.org/data/2.5/weather?" + , result);
+	}
+
+}

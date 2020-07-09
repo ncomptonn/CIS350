@@ -1,0 +1,14 @@
+package images;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class APIRequestTest {
+
+	@Test
+	void test() {
+		fail("Not yet implemented");
+	}
+
+}

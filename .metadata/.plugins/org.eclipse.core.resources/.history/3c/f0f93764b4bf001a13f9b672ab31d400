@@ -1,0 +1,11 @@
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+class APIRequestTest {
+
+	@Test
+	public void testFlaseZip() {
+		Junit test = new Junit()
+		fail("Not yet implemented");
+	}
+}

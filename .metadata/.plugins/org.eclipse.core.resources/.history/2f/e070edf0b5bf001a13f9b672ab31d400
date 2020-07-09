@@ -1,0 +1,12 @@
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class Testing {
+
+	@Test
+	public void testUseZip() {
+		Junit test = new Junit();
+	}
+
+}
