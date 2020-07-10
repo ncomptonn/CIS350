@@ -5,8 +5,12 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.google.gson.*;
 import com.google.gson.reflect.*;
+
 
 public class APIRequest {
 
@@ -20,6 +24,9 @@ public class APIRequest {
 	Object longitude;
 	Object latitude;
 	Object cityName;
+	String[] weekForcast = new String[7];
+	int[] weekForcastHighs = new int[7];
+	int[] weekForcastLows = new int[7];
 	
 	final String UrlString = "http://api.openweathermap.org/data/2.5/weather?";
 	final String appid = "&appid=7b4f07573c184034f4d2230c7d5046b6&units=imperial";
@@ -54,7 +61,7 @@ public class APIRequest {
 		StringBuilder weatherInfoJson = new StringBuilder();
 
 		try {
-			// format desired url
+			// format desired URL
 			URL url = new URL(urlToRequest); 
 			// open connection
 			URLConnection url_conn = url.openConnection();
@@ -73,7 +80,7 @@ public class APIRequest {
 			// Once info is all taken, close the stream reader.
 			br.close(); 
 
-			// map info from json file
+			// map info from JSON file
 			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString()); 
 			Map<String, Object> coordMap = jsonToMap(weatherInfoMap.get("coord").toString());
 			Map<String, Object> mainMap = jsonToMap(weatherInfoMap.get("main").toString()); 
@@ -97,15 +104,14 @@ public class APIRequest {
 	}
 
 	public void getOneshot(String zipCode, String countryCode) {
-		// get current weather to find lon&lat
+		// get current weather to find longitude & latitude
 		this.getWeatherCurr(zipCode, countryCode);
 		
-		// Everything here is built from getWeatherCurrent(int, String) function
-		String urlToRequest = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude
-				+ "&exclude=current" + appid;
+		// Everything here is built from getWeatherCurrent function
+		String urlToRequest = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=current" + appid;
 		StringBuilder weatherInfoJson = new StringBuilder();
-
-		try {
+		
+		try {	
 			URL url = new URL(urlToRequest);
 			URLConnection url_conn = url.openConnection();
 			InputStreamReader is = new InputStreamReader(url_conn.getInputStream());
@@ -117,11 +123,42 @@ public class APIRequest {
 			br.close();
 
 			// Map out data
-			Map<String, Object> weatherInfoMap = jsonToMap(weatherInfoJson.toString());
+			String weather = weatherInfoJson.toString();
 			
-			// currently just prints out the data to show structure
-			System.out.println(weatherInfoMap);
-		} catch (Exception e) {
+			//used to extract information
+			final String OWM_LIST = "daily";
+		    final String OWM_WEATHER = "weather";
+		    final String OWM_TEMPERATURE = "temp";
+		    final String OWM_MAX = "max";
+		    final String OWM_MIN = "min";
+		    final String OWM_DESCRIPTION = "main"; 
+		
+		    JSONObject forecastJson = new JSONObject(weather);
+	        JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+			
+	        for(int i = 0; i < weatherArray.length(); i++) {
+	            // For now, using the format "Day, description, hi/low"
+	            String description;
+	 
+	            // Get the JSON object representing the day
+	            JSONObject dayForecast = weatherArray.getJSONObject(i);
+	 
+	            // description is in a child array called "weather", which is 1 element long.
+	            JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+	            description = weatherObject.getString(OWM_DESCRIPTION);
+	 
+	            // Temperatures are in a child object called "temp".  Try not to name variables
+	            // "temp" when working with temperature.  It confuses everybody.
+	            JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
+	            int high = (int)temperatureObject.getDouble(OWM_MAX);
+	            int low = (int)temperatureObject.getDouble(OWM_MIN);
+	 
+	            weekForcast[i] = description;
+	            weekForcastHighs[i] = high;
+	            weekForcastLows[i] = low;
+	        }
+		} 
+		catch (Exception e) {
 			System.out.println(e);
 		}
 	}
