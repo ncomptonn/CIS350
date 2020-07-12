@@ -4,17 +4,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import com.google.gson.*;
 import com.google.gson.reflect.*;
 
-
 public class APIRequest {
 
-	Object curr_temp;
+	Object curr_temp = 0;
 	Object curr_temp_feel;
 	Object temp_min;
 	Object temp_max;
@@ -24,12 +21,12 @@ public class APIRequest {
 	Object longitude;
 	Object latitude;
 	Object cityName;
-	String[] weekForcast = new String[7];
-	int[] weekForcastHighs = new int[7];
-	int[] weekForcastLows = new int[7];
+	String[] weekForcast = new String[8];
+	int[] weekForcastHighs = new int[8];
+	int[] weekForcastLows = new int[8];
 	
-	final String UrlString = "http://api.openweathermap.org/data/2.5/weather?";
-	final String appid = "&appid=7b4f07573c184034f4d2230c7d5046b6&units=imperial";
+	final static String UrlString = "http://api.openweathermap.org/data/2.5/weather?";
+	final static String appid = "&appid=7b4f07573c184034f4d2230c7d5046b6&units=imperial";
 
 	public static Map<String, Object> jsonToMap(String str) {
 		Map<String, Object> map = new Gson().fromJson(str, new TypeToken<HashMap<String, Object>>() {
@@ -157,7 +154,7 @@ public class APIRequest {
 	            weekForcastHighs[i] = high;
 	            weekForcastLows[i] = low;
 	        }
-		} 
+		}
 		catch (Exception e) {
 			System.out.println(e);
 		}

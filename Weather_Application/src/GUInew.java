@@ -8,12 +8,14 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.awt.Color;
 import javax.swing.SwingConstants;
 
 
 public class GUInew extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	APIRequest APIR = new APIRequest();
 	
@@ -25,7 +27,7 @@ public class GUInew extends JFrame {
 		APIR.getOneshot(zipCode, countryCode);
 	}
 	
-	/** Display Currnet Weather */
+	/** Display Current Weather */
 	private void currentWeatherDisplay() {
 		/** Panel 0 (Current Weather Information)**/
 		JPanel panel = new JPanel();
@@ -45,36 +47,42 @@ public class GUInew extends JFrame {
 		panel.add(lblNewLabel_1);
 
 		JLabel lblNewLabel_2 = new JLabel("Feels Like: " + APIR.curr_temp_feel + "°");
-		lblNewLabel_2.setBounds(31, 92, 231, 32);
+		lblNewLabel_2.setBounds(31, 106, 231, 32);
 		panel.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_3 = new JLabel("Clouds: " + APIR.cloud_coverage + "%");
-		lblNewLabel_3.setBounds(31, 125, 249, 32);
+		lblNewLabel_3.setBounds(274, 60, 249, 32);
 		panel.add(lblNewLabel_3);
 
 		JLabel lblNewLabel_4 = new JLabel("Wind: " + APIR.wind_speed + "mph");
-		lblNewLabel_4.setBounds(31, 157, 172, 32);
+		lblNewLabel_4.setBounds(31, 223, 172, 32);
 		panel.add(lblNewLabel_4);
 
 		JLabel lblNewLabel_5 = new JLabel("Humidity: " + APIR.humidity + "%");
-		lblNewLabel_5.setBounds(270, 60, 172, 32);
+		lblNewLabel_5.setBounds(274, 106, 172, 32);
 		panel.add(lblNewLabel_5);
 
 		JLabel lblNewLabel_6 = new JLabel("Latitude: " + APIR.latitude);
-		lblNewLabel_6.setBounds(270, 100, 211, 24);
+		lblNewLabel_6.setBounds(274, 150, 211, 24);
 		panel.add(lblNewLabel_6);
 
 		JLabel lblNewLabel_7 = new JLabel("Longitude: " + APIR.longitude);
-		lblNewLabel_7.setBounds(270, 129, 201, 24);
+		lblNewLabel_7.setBounds(274, 189, 201, 24);
 		panel.add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_23 = new JLabel("High: " + APIR.temp_max + "°");
+		lblNewLabel_23.setBounds(31, 154, 144, 16);
+		panel.add(lblNewLabel_23);
+		
+		JLabel lblNewLabel_24 = new JLabel("Low: " + APIR.temp_min + "°");
+		lblNewLabel_24.setBounds(31, 193, 172, 16);
+		panel.add(lblNewLabel_24);
 		
 		//Background Img
 		JLabel lblNewLabel_0 = new JLabel("");
 		lblNewLabel_0.setIcon(new ImageIcon(GUInew.class.getResource("/images/Fluorescent-Gradient-Final.jpg")));
 		lblNewLabel_0.setBounds(0, 0, 800, 272);
 		panel.add(lblNewLabel_0);
-
-		
 	}
 	
 	private int findDay() {
@@ -127,6 +135,9 @@ public class GUInew extends JFrame {
 		case 13: 
 			dayName = "FRI";
 			break;
+		default:
+			System.out.println("Error in switch statements");
+			break;
 		}
 		return dayName;
 	}
@@ -176,7 +187,7 @@ public class GUInew extends JFrame {
 		lblNewLabel_14.setBounds(707, 20, 80, 16);
 		panel_1.add(lblNewLabel_14);
 		
-		/** Forcast */
+		/** Forecast */
 		JLabel lblNewLabel_15 = new JLabel("" + APIR.weekForcast[0]);
 		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_15.setBounds(6, 59, 100, 16);
@@ -248,9 +259,29 @@ public class GUInew extends JFrame {
 		lblNewLabel_22_6.setBounds(707, 87, 80, 16);
 		panel_1.add(lblNewLabel_22_6);
 	}
+	
+	private void checkInfo() {
+		if (APIR.cityName == null) {
+			if (JOptionPane.showConfirmDialog(null, "Incorrect information, would you like to try again?", "Weather", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				// yes option
+				try {
+					GUInew frame = new GUInew();
+					frame.setVisible(true);
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			} 
+			else {
+			    // no option
+				System.exit(0);
+			}
+		}
+	}
 
-	/** Create the frame. */
-	public GUInew() {
+	/** Create the frame. 
+	 * @throws InterruptedException */
+	public GUInew(){
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 500);
@@ -260,9 +291,9 @@ public class GUInew extends JFrame {
 		contentPane.setLayout(null);
 		
 		enterLocation();
+		checkInfo();
 		currentWeatherDisplay();
-		weekWeatherDisplay();
-	
+		weekWeatherDisplay();	
 	}
 }
 

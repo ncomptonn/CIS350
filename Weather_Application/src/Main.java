@@ -3,12 +3,7 @@ import java.awt.EventQueue;
 public class Main {
 
 	public static void main(String[] args) {
-
-		//new GUI();
-		
-		/**
-		 * Launch the application.
-		 */
+		/** Launch the application */
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -19,7 +14,5 @@ public class Main {
 				}
 			}
 		});
-
-	}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 }
