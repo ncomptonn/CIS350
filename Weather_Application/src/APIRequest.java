@@ -11,7 +11,7 @@ import com.google.gson.reflect.*;
 
 public class APIRequest {
 
-	Object curr_temp = 0;
+	Object curr_temp;
 	Object curr_temp_feel;
 	Object temp_min;
 	Object temp_max;

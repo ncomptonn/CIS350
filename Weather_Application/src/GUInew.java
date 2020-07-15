@@ -93,7 +93,7 @@ public class GUInew extends JFrame {
 		return dayOfWeek;
 	}
 
-	private String getDay(int day) {
+	public String getDay(int day) {
 		String dayName = "null";
 		switch (day) {
 		case 1: 
@@ -269,7 +269,7 @@ public class GUInew extends JFrame {
 					frame.setVisible(true);
 				} 
 				catch (Exception e) {
-					e.printStackTrace();
+					e.printStackTrace(); 
 				}
 			} 
 			else {
