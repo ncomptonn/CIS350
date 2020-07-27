@@ -91,22 +91,22 @@ public class JUnitTests {
 		APIR.getOneshot("23", "us");
 	}
 	
-	@Test
-	public void getDayTest() {
-		assertTrue(gui.getDay(1) == "SUN");
-		assertTrue(gui.getDay(2) == "MON");
-		assertTrue(gui.getDay(3) == "TUE");
-		assertTrue(gui.getDay(4) == "WED");
-		assertTrue(gui.getDay(5) == "THU");
-		assertTrue(gui.getDay(6) == "FRI");
-		assertTrue(gui.getDay(7) == "SAT");
-		assertTrue(gui.getDay(8) == "SUN");
-		assertTrue(gui.getDay(9) == "MON");
-		assertTrue(gui.getDay(10) == "TUE");
-		assertTrue(gui.getDay(11) == "WED");
-		assertTrue(gui.getDay(12) == "THU");
-		assertTrue(gui.getDay(13) == "FRI");
-	}
+//	@Test
+//	public void getDayTest() {
+//		assertTrue(gui.getDay(1) == "SUN");
+//		assertTrue(gui.getDay(2) == "MON");
+//		assertTrue(gui.getDay(3) == "TUE");
+//		assertTrue(gui.getDay(4) == "WED");
+//		assertTrue(gui.getDay(5) == "THU");
+//		assertTrue(gui.getDay(6) == "FRI");
+//		assertTrue(gui.getDay(7) == "SAT");
+//		assertTrue(gui.getDay(8) == "SUN");
+//		assertTrue(gui.getDay(9) == "MON");
+//		assertTrue(gui.getDay(10) == "TUE");
+//		assertTrue(gui.getDay(11) == "WED");
+//		assertTrue(gui.getDay(12) == "THU");
+//		assertTrue(gui.getDay(13) == "FRI");
+//	}
 	
 	@Test
 	public void testGUI() {
