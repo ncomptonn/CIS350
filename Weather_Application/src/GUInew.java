@@ -1,10 +1,15 @@
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,6 +17,16 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JTabbedPane;
 
 
 public class GUInew extends JFrame {
@@ -174,11 +189,72 @@ public class GUInew extends JFrame {
 		return imageName;
 	}
 	
+	private void chooseBackground(JLabel j) {
+	   	JRadioButton pinkFade = new JRadioButton("Pink Fade");
+	    pinkFade.setMnemonic(KeyEvent.VK_B);
+	    pinkFade.setActionCommand("Pink Fade");
+	    pinkFade.setSelected(true);
+
+	    JRadioButton multiColor = new JRadioButton("Multi-Color");
+	    multiColor.setMnemonic(KeyEvent.VK_C);
+	    multiColor.setActionCommand("Multi-Color");
+
+	    JRadioButton yellow = new JRadioButton("Yellow");
+	    yellow.setMnemonic(KeyEvent.VK_D);
+	    yellow.setActionCommand("Yellow");
+
+	    JRadioButton purple = new JRadioButton("Purple");
+	    purple.setMnemonic(KeyEvent.VK_R);
+	    purple.setActionCommand("Purple");
+
+	    //Group the radio buttons.
+	    ButtonGroup group = new ButtonGroup();
+	    group.add(pinkFade);
+	    group.add(multiColor);
+	    group.add(yellow);
+	    group.add(purple);
+	    
+	    JButton ok = new JButton("Ok");
+
+	    JPanel radioPanel = new JPanel(new GridLayout(0, 1));
+	    radioPanel.add(pinkFade);
+	    radioPanel.add(multiColor);
+	    radioPanel.add(yellow);
+	    radioPanel.add(purple);
+	    radioPanel.add(ok);
+	    
+	    JFrame frame = new JFrame("Background");
+	    frame.setBounds(20, 20, 200, 200);
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.add(radioPanel);
+	    frame.setVisible(true);
+	    
+	    ok.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		if (pinkFade.isSelected()) {
+	    			j.setIcon(new ImageIcon(GUInew.class.getResource("/images/Fluorescent-Gradient-Final.jpg")));
+	    		}
+	    		if (multiColor.isSelected()) {
+	    			j.setIcon(new ImageIcon(GUInew.class.getResource("/images/multiColor.jpg")));
+	    		}
+	    		if (yellow.isSelected()) {
+	    			j.setIcon(new ImageIcon(GUInew.class.getResource("/images/yellow.jpg")));
+	    		}
+	    		if (purple.isSelected()) {
+	    			j.setIcon(new ImageIcon(GUInew.class.getResource("/images/purple.jpg")));
+	    		}
+	    		frame.setDefaultCloseOperation(HIDE_ON_CLOSE);
+	    	}
+	    });
+
+}
+	
 	private void currentWeatherDisplay() {
+	
 		//** Panel 0 (Current Weather Information)**/
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
-		panel.setBounds(0, 0, 800, 281);
+		panel.setBounds(0, 20, 800, 281);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -290,9 +366,79 @@ public class GUInew extends JFrame {
 		
 		//Background Img
 		JLabel lblNewLabel_0 = new JLabel("");
-		lblNewLabel_0.setIcon(new ImageIcon(GUInew.class.getResource("/images/Fluorescent-Gradient-Final.jpg")));
 		lblNewLabel_0.setBounds(0, 0, 799, 281);
 		panel.add(lblNewLabel_0);
+		lblNewLabel_0.setIcon(new ImageIcon(GUInew.class.getResource("/images/Fluorescent-Gradient-Final.jpg")));
+		
+		/** Menu */
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(0, 0, 800, 20);
+		contentPane.add(menuBar);
+		
+		//menu 1
+		JMenu menu1 = new JMenu("Change Location");
+		menuBar.add(menu1);
+		JMenuItem newWindow = new JMenuItem("Open in new window");
+		newWindow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							GUInew frame = new GUInew();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		menu1.add(newWindow);
+		
+		//menu 2
+		JMenu menu2 = new JMenu("About");
+		menuBar.add(menu2);
+		JMenuItem learnAbout = new JMenuItem("Learn About The App");
+		learnAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Runnable r = () -> {
+		            String html = "<html><body width='500'><h1>Hey!</h1>"
+		                + "<p>This weather app was created by: "
+		                + "<br><br>"
+		                + "Nicholas Compton"
+		                + "<br>"
+		                + "Jeremy Bottoms"
+		                + "<br>"
+		                + "David Butz"
+		                + "<br><br>"
+		                + "Using a weather API provided by OpenWeather, we are able to use the location information entered in to send different requests to the API to retrieve weather data for the entered location."
+		                + " More specifically, the zip code and country code is used to get the current weather data. After parsing the json file that is retrieved from the API, we are able to display the weather information."
+		                + "<br><br>"
+		                + "The first call (seen in \"getWeatherCurr\") also provides us with the longitude and latitude for the zipcode entered. This allows us to make another call to the API (seen in \"oneShot\") using the longitude and latitude to get the week weather forecast."
+		                + " The source code can be found at the github link: https://github.com/ncomptonn/CIS350."
+		                + "<br><br>"
+		                + "<br><br>"
+		                + "July 26, 2020";
+		            // change to alter the width 
+		            int w = 175;
+
+		            JOptionPane.showMessageDialog(null, String.format(html, w, w));
+		        };
+		        SwingUtilities.invokeLater(r);
+			}
+		});
+		menu2.add(learnAbout);
+		
+		//menu 3
+		JMenu menu3 = new JMenu("Settings");
+		menuBar.add(menu3);
+		JMenuItem changeBackground = new JMenuItem("Change Background");
+		changeBackground.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			   chooseBackground(lblNewLabel_0);
+			}
+		});
+		menu3.add(changeBackground);
 	}
 		
 	private void weekWeatherDisplay() {
@@ -300,7 +446,7 @@ public class GUInew extends JFrame {
 		/** Panel 1 (Week Weather Information)*/
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(250, 240, 230));
-		panel_1.setBounds(0, 280, 800, 198);
+		panel_1.setBounds(0, 300, 800, 198);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -502,16 +648,20 @@ public class GUInew extends JFrame {
 		JLabel lblNewLabel_24_1_5 = new JLabel("");
 		lblNewLabel_24_1_5.setBounds(687, 16, 90, 153);
 		panel_1.add(lblNewLabel_24_1_5);
+		
 	}
 	
-	/** Create the frame. 
-	 * @throws InterruptedException */
-	public GUInew(){
+	
+	
+	
+		/** Create the frame. 
+		 * @throws InterruptedException */
+		public GUInew(){
 
-		enterLocation();
-
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 800, 500);
+			enterLocation();
+			
+			setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			setBounds(100, 100, 800, 520);
 			contentPane = new JPanel();
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 			setContentPane(contentPane);
