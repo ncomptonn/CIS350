@@ -10,9 +10,11 @@ import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Robot;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.awt.AWTException;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -27,6 +29,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTabbedPane;
+import javax.swing.SingleSelectionModel;
 
 
 public class GUInew extends JFrame {
@@ -36,14 +39,14 @@ public class GUInew extends JFrame {
 	APIRequest APIR = new APIRequest();
 	
 	/** Find Location */
-	private void enterLocation() {		
+	public void enterLocation() {		
 		String zipCode = JOptionPane.showInputDialog(null, "Enter Zip Code: ");
 		String countryCode = JOptionPane.showInputDialog(null, "Enter Country Code: ");
 		APIR.getWeatherCurr(zipCode, countryCode);
 		APIR.getOneshot(zipCode, countryCode);
 	}
 	
-	private boolean checkInfo() {
+	public boolean checkInfo() {
 		if (APIR.cityName == null) {
 			if (JOptionPane.showConfirmDialog(null, "Incorrect information, would you like to try again?", "Weather", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				// yes option
@@ -72,7 +75,7 @@ public class GUInew extends JFrame {
 		return true;
 	}
 	
-	private String getDay(int day) {
+	String getDay(int day) {
 		String dayName = "null";
 		switch (day) {
 		case 1: 
@@ -120,7 +123,6 @@ public class GUInew extends JFrame {
 		}
 		return dayName;
 	}
-	/** Display  Current Weather */
 	
 	private void clock(JPanel panel, JLabel lblNewLabel_15) {
 		Thread clock = new Thread() {
@@ -189,7 +191,7 @@ public class GUInew extends JFrame {
 		return imageName;
 	}
 	
-	private void chooseBackground(JLabel j) {
+	public void chooseBackground(JLabel j) {
 	   	JRadioButton pinkFade = new JRadioButton("Pink Fade");
 	    pinkFade.setMnemonic(KeyEvent.VK_B);
 	    pinkFade.setActionCommand("Pink Fade");
@@ -226,7 +228,7 @@ public class GUInew extends JFrame {
 	    JFrame frame = new JFrame("Background");
 	    frame.setBounds(20, 20, 200, 200);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.add(radioPanel);
+	    frame.getContentPane().add(radioPanel);
 	    frame.setVisible(true);
 	    
 	    ok.addActionListener(new ActionListener() {
@@ -247,8 +249,9 @@ public class GUInew extends JFrame {
 	    	}
 	    });
 
-}
+	}
 	
+	/** Display  Current Weather */
 	private void currentWeatherDisplay() {
 	
 		//** Panel 0 (Current Weather Information)**/
@@ -412,7 +415,7 @@ public class GUInew extends JFrame {
 		                + "David Butz"
 		                + "<br><br>"
 		                + "Using a weather API provided by OpenWeather, we are able to use the location information entered in to send different requests to the API to retrieve weather data for the entered location."
-		                + " More specifically, the zip code and country code is used to get the current weather data. After parsing the json file that is retrieved from the API, we are able to display the weather information."
+		                + " More specifically, the zip code and country code are used to get the current weather data. After parsing the JSON file that is retrieved from the API, we are able to display the weather information."
 		                + "<br><br>"
 		                + "The first call (seen in \"getWeatherCurr\") also provides us with the longitude and latitude for the zipcode entered. This allows us to make another call to the API (seen in \"oneShot\") using the longitude and latitude to get the week weather forecast."
 		                + " The source code can be found at the github link: https://github.com/ncomptonn/CIS350."
@@ -650,9 +653,6 @@ public class GUInew extends JFrame {
 		panel_1.add(lblNewLabel_24_1_5);
 		
 	}
-	
-	
-	
 	
 		/** Create the frame. 
 		 * @throws InterruptedException */
